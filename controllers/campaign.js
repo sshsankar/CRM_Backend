@@ -14,19 +14,18 @@ const sendCampaign = async (message, customerId) => {
 };
 
 exports.createCampaign = async (req, res) => {
-    const { criteria, message } = req.body;
+    console.log(req.body)
+    let { criteria, message } = req.body;
 
     try {
         let query = {};
 
-        if (criteria.totalSpends) query.totalSpends = { $gt: criteria.totalSpends };
-        if (criteria.visits) query.visits = criteria.visits;
-        if (criteria.lastVisit) query.lastVisit = { $lt: new Date(Date.now() - criteria.lastVisit) };
-
-        const customers = await Customer.find(query);
+        const customers = await Customer.find();
 
         const logEntries = await Promise.all(customers.map(async (customer) => {
-            const response = await sendCampaign(message.replace('{name}', customer.name), customer._id);
+            const response = await sendCampaign("Hi "+customer.name +", you can avail 10% coupon", customer._id);
+            message="Hi "+customer.name +" "+message;
+            
             return new CommunicationLog({
                 customerId: response.customerId,
                 message,
