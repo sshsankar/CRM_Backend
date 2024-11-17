@@ -19,12 +19,12 @@ exports.createCampaign = async (req, res) => {
 
     try {
         let query = {};
-
+        msg=message
         const customers = await Customer.find();
 
         const logEntries = await Promise.all(customers.map(async (customer) => {
             const response = await sendCampaign("Hi "+customer.name +", you can avail 10% coupon", customer._id);
-            message="Hi "+customer.name +" "+message;
+            message="Hi "+customer.name +" "+msg;
             
             return new CommunicationLog({
                 customerId: response.customerId,
